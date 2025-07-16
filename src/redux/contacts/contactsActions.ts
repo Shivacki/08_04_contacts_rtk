@@ -1,3 +1,4 @@
+import { Action } from 'redux'
 import { ThunkAction } from 'redux-thunk';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -11,17 +12,15 @@ import { ContactDto } from 'src/types/dto/ContactDto';
 
 
 
-export interface ContactsAction {
-  type: string;
-  payload?: any;
-}
+// export interface ContactsAction {
+//   type: string;
+//   payload?: any;
+// }
 
-/*
 export interface ContactsAction extends Action {
   // type: string;  // see Action: import { Action } from 'redux';
   payload?: any;
 }
-*/
 
 export enum ContactsActionTypes {
   // Actions: pending, fulfilled и rejected
@@ -57,17 +56,28 @@ export const fetchContactsThunk: ThunkAction<void, RootState, any, ContactsActio
 };
 
 
-export const fetchContactsAsyncThunk = createAsyncThunk<
+export const fetchContactsAsyncThunk = createAsyncThunk/*<
   ContactDto[], 
-  any, 
+  void, 
   { 
     // dispatch: ContactsDispatch;
     state: RootState;     // Тип состояния, доступный в thunk через getState().
     rejectValue: string;  // Тип значения, которое будет возвращено при отклонении thunk
   }
->(
+>*/(
   'fetchContactsAsyncThunk',
-  async (arg: any, thunkApi /*{ rejectWithValue }*/) => {
+  
+  // /*
+  async () => {
+    console.log('fetchContactsAsyncThunk start ');
+    // return []
+    await sleepAsync(1000);  // имитация доп. задержки при загрузке
+    return await loadJSON(FETCH_PATHS.contacts) as ContactDto[]; 
+  }
+  // */
+
+  /*
+  async (arg: any, thunkApi) => {
     console.log('fetchContactsAsyncThunk start ');
     try {
       await sleepAsync(1000);  // имитация доп. задержки при загрузке
@@ -83,5 +93,6 @@ export const fetchContactsAsyncThunk = createAsyncThunk<
       // Без try-catch в редьюсер отправится err ???
     }
   }
+  */
 );
 

@@ -7,6 +7,7 @@ import {ContactCard} from 'src/components/ContactCard';
 import {FilterForm, FilterFormValues} from 'src/components/FilterForm';
 import {ContactDto} from 'src/types/dto/ContactDto';
 import { GroupContactsDto } from 'src/types/dto/GroupContactsDto';
+import { log } from 'console';
 
 
 export const ContactListPage = () => {
@@ -14,7 +15,7 @@ export const ContactListPage = () => {
   // console.log('render ContactListPage');
   
   const contactsDataStore: ContactDto[] = useSelector(selectContactsData);
-  // console.log('ContactListPage contactsDataStore: ', contactsDataStore);
+  console.log('ContactListPage contactsDataStore: ', contactsDataStore);
 
   const isLoading = useSelector(selectContactsIsLoading);
   const error = useSelector(selectContactsError);
@@ -48,8 +49,11 @@ export const ContactListPage = () => {
 
 
   useEffect(() => {
+    console.log('ContactListPage useEffect contactsDataStore:', contactsDataStore);
+    
     // Обновляем лок. сост-е при изм-ии данных хранилища (например, после fetchContactsThunk)
-    setContacts(contactsDataStore);
+    if (!!contactsDataStore)
+      setContacts(contactsDataStore);
   }, [contactsDataStore])
 
 

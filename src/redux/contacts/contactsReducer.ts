@@ -65,26 +65,35 @@ export const contactsSlice = createSlice({
     
     builder.addMatcher(
       fetchContactsAsyncThunk.pending.match,
-      () => (
-        // Возвращаем новый state (без слияния с текущим, immer решит проблему с мутированием)
-        {
-          isLoading: true,
-          error: null,
-        } as ContactsStoreState
-      )
+      (state, action) => {
+        // console.log('fetchContactsAsyncThunk.pending');
+        // Формируем новый state (immer внутури rtk решит заменит мутирование на полностью новый state)
+        state.isLoading = true;
+        state.error = null;
+      }
     );
 
     builder.addMatcher(
       fetchContactsAsyncThunk.fulfilled.match,
       (state, action) => {
         const newData = action.payload as ContactDto[];
-        // Возвращаем новый state (без слияния с текущим, immer решит проблему с мутированием)
+        // Формируем новый state (immer внутури rtk решит заменит мутирование на полностью новый state)
+        state.isLoading = false;
+        // Временно отключаем соотв. правило eslint, т.к. он "не знает", что здесь исп-ется immer
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        state.data = newData,
+        state.favorites = [newData[0].id, newData[1].id, newData[2].id, newData[3].id],  // список Избранных контактов всегда фиксированный
+        state.error = null;
+        /*
+        // При желании можно вернуть полностью новый state
         return {
+          ...state,
           isLoading: false,
           data: newData,
           favorites: [newData[0].id, newData[1].id, newData[2].id, newData[3].id],  // список Избранных контактов всегда фиксированный
           error: null,
         } as ContactsStoreState
+        */
       }
     );
 

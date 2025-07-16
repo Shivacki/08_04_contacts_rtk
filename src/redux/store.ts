@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers, Action } from 'redux'
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from "redux-thunk";
-import type { ThunkAction } from '@reduxjs/toolkit';
+import type { ThunkAction, AnyAction, UnknownAction } from '@reduxjs/toolkit';
 // import { thunk } from 'redux-thunk';
 
 
@@ -32,9 +32,11 @@ export const store = configureStore({
 // export const useAppDispatch: () => AppDispatch = useDispatch;
 
 // Определяем тип для AppDispatch, включая thunk-функции
-export type AppDispatch = typeof store.dispatch & {
-  <R, T>(thunk: ThunkAction<R, RootState, any, any>): R;
-}
+// export type AppDispatch = typeof store.dispatch & {
+//   <R, T>(thunk: ThunkAction<R, RootState, any, any>): R;
+// }
 // Создаем хук для доступа к dispatch с правильной типизацией
 // export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppDispatch = useDispatch<ThunkDispatch<RootState, void, any>> 
+// export const useAppDispatch = useDispatch<ThunkDispatch<RootState, void, AnyAction>> 
+export const useAppDispatch = useDispatch<ThunkDispatch<RootState, void, AnyAction>> 
+// export const useAppDispatch = useDispatch.withTypes<AppDispatch>()
