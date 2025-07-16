@@ -2,9 +2,13 @@ import { ThunkAction } from 'redux-thunk';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'src/redux/store'
+import { createAsyncThunk, AsyncThunkAction } from '@reduxjs/toolkit';
 import { FETCH_PATHS } from 'src/constants/fetchPaths'
 import { loadJSON } from 'src/lib/jsonUtilities'
-// import { sleepAsync } from 'src/lib/commonUtilities'
+import { sleepAsync } from 'src/lib/commonUtilities'
+
+import { ContactDto } from 'src/types/dto/ContactDto';
+
 
 
 export interface ContactsAction {
@@ -28,11 +32,11 @@ export enum ContactsActionTypes {
 
 
 // Типизированный useDispatch для исп-я вовне
-export type ContactsDispatch = ThunkDispatch<RootState, null, ContactsAction>;
+export type ContactsDispatch = ThunkDispatch<RootState, any, ContactsAction>;
 export const useContactsDispatch = () => useDispatch<ContactsDispatch>();
 
 // Типизированная ф-я запроса данных с сервера в рамках redux thunk, к-ую можно передать в dispatch
-export const fetchContactsThunk: ThunkAction<void, RootState, null, ContactsAction> = async (dispatch, getState) => {
+export const fetchContactsThunk: ThunkAction<void, RootState, any, ContactsAction> = async (dispatch, getState) => {
   // ... логика thunk ...
   // const state = getState();
   // console.log("Current store state:", state);
@@ -53,24 +57,31 @@ export const fetchContactsThunk: ThunkAction<void, RootState, null, ContactsActi
 };
 
 
-/*
-// Альтернатива fetchContactsThunk
-type ContactsThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  null,
-  ContactsAction //Action
->;
-
-// Типизированная ф-я запроса данных с сервера в рамках redux thunk, к-ую можно передать в dispatch
-export const fetchContactsThunk_2 = (): ContactsThunk<Promise<void>> => async (dispatch, getState) => {
-  // ... повторить здесь код fetchContactsThunk
-};
-
-// Пример использования:
-// import { useDispatch } from 'react-redux';
-// import { ContactsDispatch, fetchContactsThunk_2 } from 'src/redux/contacts/contactsActions'
-// const dispatch = useDispatch<ContactsDispatch>();
-// dispatch(fetchContactsThunk_2);
-*/
+export const fetchContactsAsyncThunk = createAsyncThunk<
+  ContactDto[], 
+  any, 
+  { 
+    // dispatch: ContactsDispatch;
+    state: RootState;     // Тип состояния, доступный в thunk через getState().
+    rejectValue: string;  // Тип значения, которое будет возвращено при отклонении thunk
+  }
+>(
+  'fetchContactsAsyncThunk',
+  async (arg: any, thunkApi /*{ rejectWithValue }*/) => {
+    console.log('fetchContactsAsyncThunk start ');
+    try {
+      await sleepAsync(1000);  // имитация доп. задержки при загрузке
+      const data = await loadJSON(FETCH_PATHS.contacts); 
+      console.log('fetchContactsAsyncThunk data: ', data);
+      return data as ContactDto[];
+      // return thunkAPI.fulfillWithValue(data as unknown);
+      // return await loadJSON(FETCH_PATHS.contacts);
+    } catch(err) {
+      // Обработка ошибок
+      return thunkApi.rejectWithValue((err as Error).message);
+      // return (err as Error).message;
+      // Без try-catch в редьюсер отправится err ???
+    }
+  }
+);
 

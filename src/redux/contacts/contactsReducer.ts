@@ -1,4 +1,5 @@
-import { ContactsAction, ContactsActionTypes } from './contactsActions'
+import { createSlice } from '@reduxjs/toolkit';
+import { ContactsAction, ContactsActionTypes, fetchContactsAsyncThunk } from './contactsActions'
 import { ContactDto } from 'src/types/dto/ContactDto';
 import { FavoriteContactsDto } from 'src/types/dto/FavoriteContactsDto';
 
@@ -10,14 +11,14 @@ interface ContactsStoreState {
   favorites: FavoriteContactsDto,  // Избранные контакты
 }
 
-export const initialState: ContactsStoreState = {
+export const initialStateContacts: ContactsStoreState = {
   data: [],
   isLoading: false,
   error: null,
   favorites: [],
 }
 
-const contactsReducer = (state: ContactsStoreState = initialState, action: ContactsAction): ContactsStoreState => {
+const contactsReducer = (state: ContactsStoreState = initialStateContacts, action: ContactsAction): ContactsStoreState => {
   switch (action.type) {
 
     case ContactsActionTypes.GET_CONTACTS_PENDING:
@@ -51,3 +52,51 @@ const contactsReducer = (state: ContactsStoreState = initialState, action: Conta
 }
 
 export default contactsReducer
+
+export const contactsSlice = createSlice({
+  name: 'contactsSlice',
+  initialState: initialStateContacts,
+  //  Редуктор/редьюсер для синхронных действий
+  reducers: {
+
+  },
+  //  Редуктор/редьюсер для асинхронных действий
+  extraReducers(builder) {
+    
+    builder.addMatcher(
+      fetchContactsAsyncThunk.pending.match,
+      () => (
+        // Возвращаем новый state (без слияния с текущим, immer решит проблему с мутированием)
+        {
+          isLoading: true,
+          error: null,
+        } as ContactsStoreState
+      )
+    );
+
+    builder.addMatcher(
+      fetchContactsAsyncThunk.fulfilled.match,
+      (state, action) => {
+        const newData = action.payload as ContactDto[];
+        // Возвращаем новый state (без слияния с текущим, immer решит проблему с мутированием)
+        return {
+          isLoading: false,
+          data: newData,
+          favorites: [newData[0].id, newData[1].id, newData[2].id, newData[3].id],  // список Избранных контактов всегда фиксированный
+          error: null,
+        } as ContactsStoreState
+      }
+    );
+
+    builder.addMatcher(
+      fetchContactsAsyncThunk.rejected.match,
+      (state, action) => (
+        {
+          isLoading: false,
+          error: action.payload as string,
+        } as ContactsStoreState
+      )
+    );
+
+  },
+})
