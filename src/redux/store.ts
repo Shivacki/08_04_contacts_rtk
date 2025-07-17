@@ -4,15 +4,14 @@ import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from "redux-thunk";
 // import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
-
 import { contactsSlice } from './contacts'
-import groupsReducer from './groups'
+import { groupsSlice } from './groups'
 
 
 const rootReducer = combineReducers({
   contacts: contactsSlice.reducer,
-  // contacts: contactsReducer,
-  groups: groupsReducer,
+  groups: groupsSlice.reducer,
+  // groups: groupsReducer,
 });
 
 // Определение RootState на основе корневого редьюсера

@@ -2,7 +2,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FETCH_PATHS } from 'src/constants/fetchPaths'
 import { loadJSON } from 'src/lib/jsonUtilities'
-import { sleepAsync } from 'src/lib/commonUtilities'
+// import { sleepAsync } from 'src/lib/commonUtilities'
 // import { ContactDto } from 'src/types/dto/ContactDto';
 
 
@@ -39,7 +39,7 @@ export const fetchContactsAsyncThunk = createAsyncThunk/*<
   async (arg, thunkApi) => {
     // console.log('fetchContactsAsyncThunk start');
     try {
-      await sleepAsync(1000);  // имитация доп. задержки при загрузке
+      // await sleepAsync(1000);  // имитация доп. задержки при загрузке
       const data = await loadJSON(FETCH_PATHS.contacts);
       
       // Имитация динамической загрузки локального json-файла

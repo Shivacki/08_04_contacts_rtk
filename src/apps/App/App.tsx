@@ -7,30 +7,22 @@ import {Layout} from 'src/components/Layout';
 import {ContactListPage, GroupPage, ContactPage, FavoritListPage, GroupListPage} from 'src/pages';
 
 import { fetchContactsAsyncThunk } from 'src/redux/contacts/contactsActions'
-import { useGroupsDispatch, fetchGroupsThunk } from 'src/redux/groups/groupsActions'
+import { fetchGroupsAsyncThunk } from 'src/redux/groups/groupsActions'
 
 
 export const App = () => {
 
   const dispatch = useAppDispatch();
-  const dispatchGroups = useGroupsDispatch();
   
   useEffect(() => {
     // console.log('App useEffect []');
     
-    // store.dispatch();
-    
     // Асинхронная инициализация хранилища данными
     // ... Контакты
     dispatch(fetchContactsAsyncThunk());
-    
-
-
-    // dispatchContacts(fetchContactsAsyncThunk)
-    // dispatchContacts(fetchContactsThunk)
     // ... Группы контактов
-    dispatchGroups(fetchGroupsThunk)
-  }, [dispatchGroups, dispatch])
+    dispatch(fetchGroupsAsyncThunk());
+  }, [dispatch])
 
 
   return (

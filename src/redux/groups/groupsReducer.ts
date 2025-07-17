@@ -1,4 +1,5 @@
-import { GroupsAction, GroupsActionTypes } from './groupsActions'
+import { createSlice } from '@reduxjs/toolkit';
+import { fetchGroupsAsyncThunk } from './groupsActions'
 import { GroupContactsDto } from 'src/types/dto/GroupContactsDto';
 
 
@@ -8,41 +9,53 @@ interface GroupsStoreState {
   error: string | null;
 }
 
-export const initialState: GroupsStoreState = {
+export const initialStateGroups: GroupsStoreState = {
   data: [],
   isLoading: false,
   error: null,
 }
 
-const groupsReducer = (state: GroupsStoreState = initialState, action: GroupsAction): GroupsStoreState => {
-  switch (action.type) {
+export const groupsSlice = createSlice({
+  name: 'groupsSlice',
+  initialState: initialStateGroups,
+  
+  //  Редуктор/редьюсер для синхронных действий
+  reducers: {
 
-    case GroupsActionTypes.GET_GROUPS_PENDING:
-      // console.log(GroupsActionTypes.GET_GROUPS_PENDING);
-      return {
-        ...state,
-        isLoading: true,
-        error: null,
-      } 
-    case GroupsActionTypes.GET_GROUPS_FULFILLED: 
-      // console.log(GroupsActionTypes.GET_GROUPS_FULFILLED, 'payload:', action.payload);
-      return {
-        ...state,
-        isLoading: false,
-        data: action.payload as GroupContactsDto[],
-        error: null,
-      };
-    case GroupsActionTypes.GET_GROUPS_REJECTED: 
-      // console.log(GroupsActionTypes.GET_GROUPS_REJECTED, 'payload:', action.payload);
-      return {
-        ...state,
-        isLoading: false,
-        error: action.payload as string,
-      };
+  },
+  
+  //  Редуктор/редьюсер для асинхронных действий
+  extraReducers(builder) {
     
-    default:
-      return state;
-  }
-}
+    // Запрос на получение контактов в пр-ссе выполнения
+    builder.addMatcher(
+      fetchGroupsAsyncThunk.pending.match,
+      (state, action) => {
+        // Формируем новый state (immer внутури rtk заменит мутирование на новый state)
+        state.isLoading = true;
+        state.error = null;
+      }
+    );
 
-export default groupsReducer
+    // Запрос на получение контактов выполнен успешно
+    builder.addMatcher(
+      fetchGroupsAsyncThunk.fulfilled.match,
+      (state, action) => {
+        // Формируем новый state (immer внутури rtk заменит мутирование на новый state)
+        state.isLoading = false;
+        state.data = action.payload as GroupContactsDto[];
+        state.error = null;
+      }
+    );
+
+    // Запрос на получение контактов завершен с ошибкой
+    builder.addMatcher(
+      fetchGroupsAsyncThunk.rejected.match,
+      (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      }
+    );
+
+  },
+})
