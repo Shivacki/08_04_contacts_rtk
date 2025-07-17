@@ -2,11 +2,10 @@ import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers, Action } from 'redux'
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from "redux-thunk";
-import type { ThunkAction, AnyAction, UnknownAction } from '@reduxjs/toolkit';
-// import { thunk } from 'redux-thunk';
+// import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
 
-import contactsReducer, { contactsSlice } from './contacts'
+import { contactsSlice } from './contacts'
 import groupsReducer from './groups'
 
 
@@ -28,15 +27,19 @@ export const store = configureStore({
   // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
 });
 
+
+// Создаем хук для доступа к dispatch с правильной типизацией
+export const useAppDispatch = useDispatch<ThunkDispatch<RootState, void, Action>>  // или UnknownAction из @reduxjs/toolkit
+
+// Альтернативы:
+// export const useAppDispatch = useDispatch<ThunkDispatch<RootState, void, Action>>  // ThunkDispatch из redux-thunk
+
 // export type AppDispatch = typeof store.dispatch;
 // export const useAppDispatch: () => AppDispatch = useDispatch;
 
 // Определяем тип для AppDispatch, включая thunk-функции
 // export type AppDispatch = typeof store.dispatch & {
-//   <R, T>(thunk: ThunkAction<R, RootState, any, any>): R;
+//   <R, T>(thunk: ThunkAction<R, RootState, any, any>): R;  // ThunkAction из @reduxjs/toolkit
 // }
-// Создаем хук для доступа к dispatch с правильной типизацией
 // export const useAppDispatch = () => useDispatch<AppDispatch>();
-// export const useAppDispatch = useDispatch<ThunkDispatch<RootState, void, AnyAction>> 
-export const useAppDispatch = useDispatch<ThunkDispatch<RootState, void, AnyAction>> 
-// export const useAppDispatch = useDispatch.withTypes<AppDispatch>()
+

@@ -1,23 +1,18 @@
 import { useEffect } from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import { useDispatch, useStore } from 'react-redux';
 import { useAppDispatch } from 'src/redux/store'
 
 
 import {Layout} from 'src/components/Layout';
 import {ContactListPage, GroupPage, ContactPage, FavoritListPage, GroupListPage} from 'src/pages';
 
-import { ContactsDispatch, useContactsDispatch, fetchContactsThunk, fetchContactsAsyncThunk } from 'src/redux/contacts/contactsActions'
+import { fetchContactsAsyncThunk } from 'src/redux/contacts/contactsActions'
 import { useGroupsDispatch, fetchGroupsThunk } from 'src/redux/groups/groupsActions'
 
 
 export const App = () => {
 
-  const store = useStore();
-  
   const dispatch = useAppDispatch();
-  // const dispatch = useDispatch<ContactsDispatch>();
-  const dispatchContacts = useContactsDispatch();
   const dispatchGroups = useGroupsDispatch();
   
   useEffect(() => {
@@ -27,7 +22,7 @@ export const App = () => {
     
     // Асинхронная инициализация хранилища данными
     // ... Контакты
-    dispatch(fetchContactsAsyncThunk()); // nothing
+    dispatch(fetchContactsAsyncThunk());
     
 
 
@@ -35,7 +30,7 @@ export const App = () => {
     // dispatchContacts(fetchContactsThunk)
     // ... Группы контактов
     dispatchGroups(fetchGroupsThunk)
-  }, [dispatchContacts, dispatchGroups, dispatch])
+  }, [dispatchGroups, dispatch])
 
 
   return (
