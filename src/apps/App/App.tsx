@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import { useAppDispatch } from 'src/redux/store'
+import { useAppDispatch } from 'src/store'
 
 
 import {Layout} from 'src/components/Layout';
 import {ContactListPage, GroupPage, ContactPage, FavoritListPage, GroupListPage} from 'src/pages';
 
-import { fetchContactsAsyncThunk } from 'src/redux/contacts/contactsActions'
-import { fetchGroupsAsyncThunk } from 'src/redux/groups/groupsActions'
+import { fetchContactsAsyncThunk } from 'src/store/contacts/contactsActions'
+import { fetchGroupsAsyncThunk } from 'src/store/groups/groupsActions'
 
 
 export const App = () => {

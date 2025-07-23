@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux'
-import { selectGroupsData, selectGroupsError, selectGroupsIsLoading } from 'src/redux/groups'
+import { selectGroupsData, selectGroupsError, selectGroupsIsLoading } from 'src/store/groups'
 import {Col, Row} from 'react-bootstrap';
 import {GroupContactsCard} from 'src/components/GroupContactsCard';
 import { GroupContactsDto } from 'src/types/dto/GroupContactsDto';

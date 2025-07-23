@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import { useSelector } from 'react-redux'
-import { selectContactsData, selectContactsError, selectContactsIsLoading } from 'src/redux/contacts'
-import { selectGroupsData } from 'src/redux/groups'
+import { selectContactsData, selectContactsError, selectContactsIsLoading } from 'src/store/contacts'
+import { selectGroupsData } from 'src/store/groups'
 import {Col, Row} from 'react-bootstrap';
 import {ContactCard} from 'src/components/ContactCard';
 import {FilterForm, FilterFormValues} from 'src/components/FilterForm';

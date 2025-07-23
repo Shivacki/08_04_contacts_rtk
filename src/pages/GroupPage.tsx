@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useSelector } from 'react-redux'
-import { selectContactsData } from 'src/redux/contacts'
-import { selectGroupsData } from 'src/redux/groups'
+import { selectContactsData } from 'src/store/contacts'
+import { selectGroupsData } from 'src/store/groups'
 import {Col, Row} from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 import {ContactDto} from 'src/types/dto/ContactDto';
